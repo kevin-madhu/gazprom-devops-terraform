@@ -63,6 +63,7 @@ resource "aws_security_group" "allow-ssh" {
     to_port = 22
     protocol = "tcp"
     self = true
+    cidr_blocks      = ["0.0.0.0/0"] #Dangerous and should be removed
   }
 
   egress {

@@ -11,12 +11,12 @@ resource "aws_instance" "ansible" {
   }
 
  provisioner "file" {
-   source = "var.ansible_private_key_path"
+   source = file(var.ansible_private_key_path)
    destination = "/home/ec2-user/.ssh/id_ed25519"
  }
 
   provisioner "file" {
-   source = "var.ansible_public_key_path"
+   source = file(var.ansible_public_key_path)
    destination = "/home/ec2-user/.ssh/id_ed25519.pub"
  }
 
