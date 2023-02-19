@@ -16,6 +16,11 @@ resource "aws_instance" "ansible" {
 
     echo -e "\n[knodes]" >> /etc/ansible/hosts
     echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
+
+    sudo yum install -y git
+    git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git
+    cd gazprom-devops-ansible
+    ansible-playbook setup-cluster.yml
   EOT
 
   key_name = "finava-keypair"  
@@ -44,15 +49,15 @@ resource "aws_instance" "ansible" {
     ]
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum update",
-      "sudo yum install -y git",
-      "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git",
-      "cd gazprom-devops-ansible",
-      "ansible-playbook setup-cluster.yml"
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo yum update",
+  #     "sudo yum install -y git",
+  #     "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git",
+  #     "cd gazprom-devops-ansible",
+  #     "ansible-playbook setup-cluster.yml"
+  #   ]
+  # }
 
   connection {
     host = coalesce(self.public_ip, self.private_ip)
