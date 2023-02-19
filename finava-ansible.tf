@@ -12,7 +12,7 @@ resource "aws_instance" "ansible" {
     echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
 
     echo -e "\n[knodes]" >> /etc/ansible/hosts
-    echo ${aws_instancee.kub.private_ip} >> /etc/ansible/hosts
+    echo ${aws_instancee.kube.private_ip} >> /etc/ansible/hosts
   EOT
 
   key_name = "finava-keypair"  
