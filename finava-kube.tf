@@ -1,5 +1,5 @@
 resource "aws_instance" "kube" {
-  ami           = data.aws_ami.amazon_linux_ami.id
+  ami = data.aws_ami.amazon_linux_ami.id
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.finava-public-1.id}"
   vpc_security_group_ids = [aws_security_group.allow-ssh.id]
