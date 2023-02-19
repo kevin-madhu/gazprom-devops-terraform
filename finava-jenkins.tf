@@ -1,9 +1,8 @@
-resource "aws_instance" "ansible" {
+resource "aws_instance" "jenkins" {
   ami           = data.aws_ami.amazon_linux_ami.id
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.finava-public-1.id}"
   vpc_security_group_ids = [aws_security_group.allow-ssh.id]
-  user_data = file("scripts/install_ansible.sh")
   key_name = "finava-keypair"  
   
   provisioner "file" {

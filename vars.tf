@@ -21,11 +21,11 @@ variable "private_key_path" {
   type = string
 }
 
-variable "ansible_private_key_path" {
+variable "internal_private_key_path" {
   type = string
 }
 
-variable "ansible_public_key_path" {
+variable "internal_public_key_path" {
   type = string
 }
 
