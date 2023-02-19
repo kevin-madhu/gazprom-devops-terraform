@@ -3,25 +3,25 @@ resource "aws_instance" "ansible" {
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.finava-public-1.id}"
   vpc_security_group_ids = [ aws_security_group.allow-ssh.id ]
-  user_data = <<-EOT
-    #!/bin/bash
-    sudo yum update -y
-    sudo amazon-linux-extras install ansible2 -y
+  # user_data = <<-EOT
+  #   #!/bin/bash
+  #   sudo yum update -y
+  #   sudo amazon-linux-extras install ansible2 -y
 
-    echo -e "\n[ansible]" >> /etc/ansible/hosts
-    echo localhost >> /etc/ansible/hosts
+  #   echo -e "\n[ansible]" >> /etc/ansible/hosts
+  #   echo localhost >> /etc/ansible/hosts
 
-    echo -e "\n[jenkins]" >> /etc/ansible/hosts
-    echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
+  #   echo -e "\n[jenkins]" >> /etc/ansible/hosts
+  #   echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
 
-    echo -e "\n[knodes]" >> /etc/ansible/hosts
-    echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
+  #   echo -e "\n[knodes]" >> /etc/ansible/hosts
+  #   echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
 
-    sudo yum install -y git
-    git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git
-    cd gazprom-devops-ansible
-    ansible-playbook setup-cluster.yml
-  EOT
+  #   sudo yum install -y git
+  #   git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git
+  #   cd gazprom-devops-ansible
+  #   ansible-playbook setup-cluster.yml
+  # EOT
 
   key_name = "finava-keypair"  
   
@@ -58,6 +58,27 @@ resource "aws_instance" "ansible" {
   #     "ansible-playbook setup-cluster.yml"
   #   ]
   # }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum update -y",
+      "sudo amazon-linux-extras install ansible2 -y",
+      "echo -e '\n[ansible]' >> /etc/ansible/hosts",
+      "echo localhost >> /etc/ansible/hosts",
+      "echo -e '\n[jenkins]' >> /etc/ansible/hosts",
+      "echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts",
+      "echo -e '\n[knodes]' >> /etc/ansible/hosts",
+      "echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts",
+      "sudo yum install -y git",
+      "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git",
+      "cd gazprom-devops-ansible",
+      "ansible-playbook setup-cluster.yml",
+      "sudo yum install -y git",
+      "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git",
+      "cd gazprom-devops-ansible",
+      "ansible-playbook setup-cluster.yml"
+    ]
+  }
 
   connection {
     host = coalesce(self.public_ip, self.private_ip)
