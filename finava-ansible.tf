@@ -3,7 +3,20 @@ resource "aws_instance" "ansible" {
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.finava-public-1.id}"
   vpc_security_group_ids = [aws_security_group.allow-ssh.id]
-  user_data = file("scripts/install_ansible.sh")
+  user_data = <<-EOT
+    sudo yum update -y
+    sudo amazon-linux-extras install ansible2 -y
+
+    echo -e "\n[ansible]" >> /etc/ansible/hosts
+    echo ${self.private_ip} >> /etc/ansible/hosts
+
+    echo -e "\n[jenkins]" >> /etc/ansible/hosts
+    echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
+
+    echo -e "\n[knodes]" >> /etc/ansible/hosts
+    echo ${aws_instance.kub.private_ip} >> /etc/ansible/hosts
+  EOT
+
   key_name = "finava-keypair"  
   
   provisioner "file" {
