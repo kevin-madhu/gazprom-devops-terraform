@@ -8,6 +8,9 @@ resource "aws_instance" "ansible" {
     sudo yum update -y
     sudo amazon-linux-extras install ansible2 -y
 
+    echo -e "\n[ansible]" >> /etc/ansible/hosts
+    echo localhost >> /etc/ansible/hosts
+
     echo -e "\n[jenkins]" >> /etc/ansible/hosts
     echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
 
