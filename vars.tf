@@ -17,6 +17,18 @@ variable "availability_zones" {
   default = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
 }
 
+variable "private_key_path" {
+  type = string
+}
+
+variable "ansible_private_key_path" {
+  type = string
+}
+
+variable "ansible_public_key_path" {
+  type = string
+}
+
 #variable "cluster_instance_type" {
 #  type = string
 #}
