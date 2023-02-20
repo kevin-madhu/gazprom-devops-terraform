@@ -6,7 +6,8 @@ resource "aws_instance" "ansible" {
   user_data = <<-EOT
     #!/bin/bash
     sudo yum update -y
-    sudo amazon-linux-extras install ansible2 git -y
+    sudo amazon-linux-extras install ansible2 -y
+    sudo yum install git -y
 
     echo -e "\n[ansible]" >> /etc/ansible/hosts
     echo localhost >> /etc/ansible/hosts
