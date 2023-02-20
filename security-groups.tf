@@ -74,4 +74,38 @@ resource "aws_security_group" "allow-ssh" {
   }
 }
 
+resource "aws_security_group" "allow-jenkins" {
+  name        = "allow-ssh"
+  description = "allow inbound ssh access"
+  vpc_id      = aws_vpc.finava-vpc.id
 
+#  ingress {
+#    from_port = 32768
+#    to_port = 61000
+#    protocol = "tcp"
+#    security_groups = [aws_security_group.alb.id]
+#  }
+
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    self = true
+    cidr_blocks      = ["0.0.0.0/0"] #Dangerous and should be removed
+  }
+
+  ingress {
+    from_port = 8080
+    to_port = 8080
+    protocol = "tcp"
+    self = true
+    cidr_blocks      = ["0.0.0.0/0"] #Dangerous and should be removed
+  }
+
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

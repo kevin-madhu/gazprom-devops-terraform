@@ -2,8 +2,8 @@ resource "aws_instance" "jenkins" {
   ami = data.aws_ami.amazon_linux_ami.id
   instance_type = "t2.large"
   subnet_id = "${aws_subnet.finava-public-1.id}"
-  vpc_security_group_ids = [aws_security_group.allow-ssh.id]
-  key_name = "finava-keypair"  
+  vpc_security_group_ids = [ aws_security_group.allow-ssh.id, aws_security_group.allow-jenkins.id ]
+  key_name = "finava-keypair"
   
   provisioner "file" {
     source = var.internal_private_key_path
