@@ -17,6 +17,9 @@ resource "aws_instance" "ansible" {
 
     echo -e "\n[knodes]" >> /etc/ansible/hosts
     echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
+
+    git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible
+    ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml
   EOT
 
   key_name = "finava-keypair"  
@@ -42,13 +45,6 @@ resource "aws_instance" "ansible" {
       "sudo service sshd restart",
       "cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys",
       "chmod 400 ~/.ssh/id_ed25519"
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
-      "ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml"
     ]
   }
 
