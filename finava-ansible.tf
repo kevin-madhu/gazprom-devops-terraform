@@ -21,14 +21,14 @@ resource "aws_instance" "ansible" {
   user_data = <<-EOT
     #!/bin/bash
 
-    echo -e "\n[ansible]" >> ~/inventory.txt
-    echo localhost >> ~/inventory.txt
+    echo -e "\n[ansible]" >> ~ec2-user/inventory.txt
+    echo localhost >> ~ec2-user/inventory.txt
 
-    echo -e "\n[jenkins]" >> ~/inventory.txt
-    echo ${aws_instance.jenkins.private_ip} >> ~/inventory.txt
+    echo -e "\n[jenkins]" >> ~ec2-user/inventory.txt
+    echo ${aws_instance.jenkins.private_ip} >> ~ec2-user/inventory.txt
 
-    echo -e "\n[knodes]" >> ~/inventory.txt
-    echo ${aws_instance.kube.private_ip} >> ~/inventory.txt
+    echo -e "\n[knodes]" >> ~ec2-user/inventory.txt
+    echo ${aws_instance.kube.private_ip} >> ~ec2-user/inventory.txt
   EOT
 
   key_name = "finava-keypair"  
