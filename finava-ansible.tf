@@ -3,21 +3,6 @@ resource "aws_instance" "ansible" {
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.finava-public-1.id}"
   vpc_security_group_ids = [ aws_security_group.allow-ssh.id ]
-  # user_data = <<-EOT
-  #   #!/bin/bash
-  #   sudo yum update -y
-  #   sudo amazon-linux-extras install ansible2 -y
-
-  #   echo -e "\n[ansible]" >> /etc/ansible/hosts
-  #   echo localhost >> /etc/ansible/hosts
-
-  #   echo -e "\n[jenkins]" >> /etc/ansible/hosts
-  #   echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
-
-  #   echo -e "\n[knodes]" >> /etc/ansible/hosts
-  #   echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
-  # EOT
-
   user_data = <<-EOT
     #!/bin/bash
 
@@ -59,28 +44,12 @@ resource "aws_instance" "ansible" {
 
   provisioner "remote-exec" {
     inline = [
-    "sudo yum update -y",
-    "sudo amazon-linux-extras install ansible2 -y",
-    "sudo yum install git -y",
-    "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
-    "ansible-playbook -i ~/inventory.txt ~/gazprom-devops-ansible/setup-cluster.yml"
-    ]
-    
-    # inline = [
-    # "sudo yum update -y",
-    # "sudo amazon-linux-extras install ansible2 -y && ",
-
-    # "echo -e '\n[ansible]' >> /etc/ansible/hosts",
-    # "echo localhost >> /etc/ansible/hosts",
-
-    # "echo -e '\n[jenkins]' >> /etc/ansible/hosts",
-    # "echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts",
-
-    # "echo -e '\n[knodes]' >> /etc/ansible/hosts",
-    # "echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts",
-    #   "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
-    #   "ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml"
-    # ]
+      "sudo yum update -y",
+      "sudo amazon-linux-extras install ansible2 -y",
+      "sudo yum install git -y",
+      "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
+      "nohup ansible-playbook -i ~/inventory.txt ~/gazprom-devops-ansible/setup-cluster.yml > ~ec2-user/setup-cluster.log &"
+    ]    
   }
 
   connection {
