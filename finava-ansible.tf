@@ -18,6 +18,19 @@ resource "aws_instance" "ansible" {
   #   echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
   # EOT
 
+  user_data = <<-EOT
+    #!/bin/bash
+
+    echo -e "\n[ansible]" >> ~/inventory.txt
+    echo localhost >> ~/inventory.txt
+
+    echo -e "\n[jenkins]" >> ~/inventory.txt
+    echo ${aws_instance.jenkins.private_ip} >> ~/inventory.txt
+
+    echo -e "\n[knodes]" >> ~/inventory.txt
+    echo ${aws_instance.kube.private_ip} >> ~/inventory.txt
+  EOT
+
   key_name = "finava-keypair"  
   
   provisioner "file" {
@@ -45,24 +58,14 @@ resource "aws_instance" "ansible" {
   }
 
   provisioner "remote-exec" {
-    inline = <<-EOT
-    #!/bin/bash
-    sudo yum update -y
-    sudo amazon-linux-extras install ansible2 -y
-    sudo yum install git -y
-
-    sudo echo -e "\n[ansible]" >> /etc/ansible/hosts
-    sudo echo localhost >> /etc/ansible/hosts
-
-    sudo echo -e "\n[jenkins]" >> /etc/ansible/hosts
-    sudo echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
-
-    sudo echo -e "\n[knodes]" >> /etc/ansible/hosts
-    sudo echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
-
-    git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible
-    ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml
-    EOT
+    inline = [
+    "sudo yum update -y",
+    "sudo amazon-linux-extras install ansible2 -y",
+    "sudo yum install git -y",
+    "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
+    "ansible-playbook -i ~/inventory.txt ~/gazprom-devops-ansible/setup-cluster.yml"
+    ]
+    
     # inline = [
     # "sudo yum update -y",
     # "sudo amazon-linux-extras install ansible2 -y && ",
