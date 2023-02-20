@@ -48,7 +48,8 @@ resource "aws_instance" "ansible" {
       "sudo amazon-linux-extras install ansible2 -y",
       "sudo yum install git -y",
       "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
-      "nohup ansible-playbook -i ~/inventory.txt ~/gazprom-devops-ansible/setup-cluster.yml > ~ec2-user/setup-cluster.log &"
+      "nohup ansible-playbook -i ~/inventory.txt ~/gazprom-devops-ansible/setup-cluster.yml > ~ec2-user/setup-cluster.log &",
+      "sleep 1"
     ]    
   }
 
