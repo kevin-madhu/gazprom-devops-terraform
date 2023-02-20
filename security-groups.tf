@@ -75,7 +75,7 @@ resource "aws_security_group" "allow-ssh" {
 }
 
 resource "aws_security_group" "allow-jenkins" {
-  name        = "allow-ssh"
+  name        = "allow-jenkins"
   description = "allow inbound ssh access"
   vpc_id      = aws_vpc.finava-vpc.id
 
