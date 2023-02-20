@@ -87,14 +87,6 @@ resource "aws_security_group" "allow-jenkins" {
 #  }
 
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    self = true
-    cidr_blocks      = ["0.0.0.0/0"] #Dangerous and should be removed
-  }
-
-  ingress {
     from_port = 8080
     to_port = 8080
     protocol = "tcp"
