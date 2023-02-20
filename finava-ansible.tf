@@ -3,30 +3,10 @@ resource "aws_instance" "ansible" {
   instance_type = "t2.micro"
   subnet_id = "${aws_subnet.finava-public-1.id}"
   vpc_security_group_ids = [ aws_security_group.allow-ssh.id ]
-  # user_data = <<-EOT
-  #   #!/bin/bash
-  #   sudo yum update -y
-  #   sudo amazon-linux-extras install ansible2 -y
-
-  #   echo -e "\n[ansible]" >> /etc/ansible/hosts
-  #   echo localhost >> /etc/ansible/hosts
-
-  #   echo -e "\n[jenkins]" >> /etc/ansible/hosts
-  #   echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts
-
-  #   echo -e "\n[knodes]" >> /etc/ansible/hosts
-  #   echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
-
-  #   sudo yum install -y git
-  #   git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git
-  #   cd gazprom-devops-ansible
-  #   ansible-playbook setup-cluster.yml
-  # EOT
-
   user_data = <<-EOT
     #!/bin/bash
     sudo yum update -y
-    sudo amazon-linux-extras install ansible2 -y
+    sudo amazon-linux-extras install ansible2 git -y
 
     echo -e "\n[ansible]" >> /etc/ansible/hosts
     echo localhost >> /etc/ansible/hosts
@@ -36,10 +16,6 @@ resource "aws_instance" "ansible" {
 
     echo -e "\n[knodes]" >> /etc/ansible/hosts
     echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts
-
-    sudo yum install -y git
-    git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible
-    ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml
   EOT
 
   key_name = "finava-keypair"  
@@ -68,35 +44,12 @@ resource "aws_instance" "ansible" {
     ]
   }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "sudo yum update",
-  #     "sudo yum install -y git",
-  #     "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git",
-  #     "cd gazprom-devops-ansible",
-  #     "ansible-playbook setup-cluster.yml"
-  #   ]
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "chmod 400 ~/.ssh/config",
-  #     "sudo service sshd restart",
-  #     "cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys",
-  #     "chmod 400 ~/.ssh/id_ed25519",
-  #     "sudo yum update -y",
-  #     "sudo amazon-linux-extras install ansible2 -y",
-  #     "sleep 1m && sudo echo -e '\n[ansible]' >> /etc/ansible/hosts",
-  #     "sleep 1m && sudo echo localhost >> /etc/ansible/hosts",
-  #     "sleep 1m && sudo echo -e '\n[jenkins]' >> /etc/ansible/hosts",
-  #     "sleep 1m && sudo echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts",
-  #     "sleep 1m && sudo echo -e '\n[knodes]' >> /etc/ansible/hosts",
-  #     "sleep 1m && sudo echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts",
-  #     "sudo sudo yum install -y git",
-  #     "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
-  #     "sleep 1m && ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml",
-  #   ]
-  # }
+  provisioner "remote-exec" {
+    inline = [
+      "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
+      "ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml"
+    ]
+  }
 
   connection {
     host = coalesce(self.public_ip, self.private_ip)
