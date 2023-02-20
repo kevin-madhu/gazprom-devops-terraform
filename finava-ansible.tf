@@ -67,15 +67,15 @@ resource "aws_instance" "ansible" {
       "chmod 400 ~/.ssh/id_ed25519",
       "sudo yum update -y",
       "sudo amazon-linux-extras install ansible2 -y",
-      "sudo echo -e '\n[ansible]' >> /etc/ansible/hosts",
-      "sudo echo localhost >> /etc/ansible/hosts",
-      "sudo echo -e '\n[jenkins]' >> /etc/ansible/hosts",
-      "sudo echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts",
-      "sudo echo -e '\n[knodes]' >> /etc/ansible/hosts",
-      "sudo echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts",
+      "sleep 1m && sudo echo -e '\n[ansible]' >> /etc/ansible/hosts",
+      "sleep 1m && sudo echo localhost >> /etc/ansible/hosts",
+      "sleep 1m && sudo echo -e '\n[jenkins]' >> /etc/ansible/hosts",
+      "sleep 1m && sudo echo ${aws_instance.jenkins.private_ip} >> /etc/ansible/hosts",
+      "sleep 1m && sudo echo -e '\n[knodes]' >> /etc/ansible/hosts",
+      "sleep 1m && sudo echo ${aws_instance.kube.private_ip} >> /etc/ansible/hosts",
       "sudo sudo yum install -y git",
       "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
-      "ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml",
+      "sleep 1m && ansible-playbook ~/gazprom-devops-ansible/setup-cluster.yml",
     ]
   }
 
