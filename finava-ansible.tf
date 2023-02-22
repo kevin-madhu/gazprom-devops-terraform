@@ -20,12 +20,12 @@ resource "aws_instance" "ansible" {
   
   provisioner "file" {
     source = var.internal_private_key_path
-    destination = "/home/ec2-user/.ssh/id_ed25519"
+    destination = "/home/ec2-user/.ssh/id_rsa"
   }
    
   provisioner "file" {
     source = var.internal_public_key_path
-    destination = "/home/ec2-user/.ssh/id_ed25519.pub"
+    destination = "/home/ec2-user/.ssh/id_rsa.pub"
   }
 
   provisioner "file" {
@@ -37,8 +37,8 @@ resource "aws_instance" "ansible" {
     inline = [
       "chmod 400 ~/.ssh/config",
       "sudo service sshd restart",
-      "cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys",
-      "chmod 400 ~/.ssh/id_ed25519"
+      "cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys",
+      "chmod 400 ~/.ssh/id_rsa"
     ]
   }
 
