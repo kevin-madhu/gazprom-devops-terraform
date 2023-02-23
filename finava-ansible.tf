@@ -35,7 +35,11 @@ resource "aws_instance" "ansible" {
 
   provisioner "remote-exec" {
     inline = [
-      "mkdir -p /tmp/jenkins/jobs",
+      "chmod 400 ~/.ssh/config",
+      "sudo service sshd restart",
+      "cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys",
+      "chmod 400 ~/.ssh/id_rsa",
+      "mkdir -p /tmp/jenkins/jobs" #This is required for jenkins config file copy next
     ]
   }
 
@@ -49,23 +53,14 @@ resource "aws_instance" "ansible" {
     destination = "/tmp/jenkins/credentials.xml"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "chmod 400 ~/.ssh/config",
-      "sudo service sshd restart",
-      "cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys",
-      "chmod 400 ~/.ssh/id_rsa"
-    ]
-  }
-
-  provisioner "remote-exec" {
+    provisioner "remote-exec" {
     inline = [
       "sudo yum update -y",
       "sudo amazon-linux-extras install ansible2 -y",
       "sudo yum install git -y",
       "git clone git@github.com:kevin-madhu/gazprom-devops-ansible.git ~/gazprom-devops-ansible",
       "nohup ansible-playbook -i ~/inventory.txt ~/gazprom-devops-ansible/setup-cluster.yml > ~ec2-user/setup-cluster.log &",
-      "sleep 1"
+      "sleep 1",
     ]    
   }
 
