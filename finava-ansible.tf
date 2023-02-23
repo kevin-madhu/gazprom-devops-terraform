@@ -33,6 +33,12 @@ resource "aws_instance" "ansible" {
     destination = "/home/ec2-user/.ssh/config"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p /tmp/jenkins/jobs",
+    ]
+  }
+
   provisioner "file" {
     source = "templates/jenkins/jobs/gazprom-devops-pipeline.xml"
     destination = "/tmp/jenkins/jobs/gazprom-devops-pipeline.xml"
