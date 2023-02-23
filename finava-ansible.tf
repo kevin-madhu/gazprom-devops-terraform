@@ -34,13 +34,13 @@ resource "aws_instance" "ansible" {
   }
 
   provisioner "file" {
-    source = "templates/jenkins/jobs/gazprom-devops-pipeline.xml"
-    destination = "/tmp/gazprom-devops-pipeline.xml"
-  }
-
-  provisioner "file" {
     content = data.template_file.jenkins_credentials_data.rendered
     destination = "/tmp/credentials.xml"
+  }
+  
+  provisioner "file" {
+    source = "templates/jenkins/jobs/gazprom-devops-pipeline.xml"
+    destination = "/tmp/gazprom-devops-pipeline.xml"
   }
 
   provisioner "remote-exec" {
