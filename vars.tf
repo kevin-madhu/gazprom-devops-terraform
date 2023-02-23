@@ -29,6 +29,13 @@ variable "internal_public_key_path" {
   type = string
 }
 
+variable "dockerhub_credentials" {
+  type = object({
+    username: string,
+    password: string
+  })
+}
+
 #variable "cluster_instance_type" {
 #  type = string
 #}

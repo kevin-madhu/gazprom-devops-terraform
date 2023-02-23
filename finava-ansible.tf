@@ -33,6 +33,16 @@ resource "aws_instance" "ansible" {
     destination = "/home/ec2-user/.ssh/config"
   }
 
+  provisioner "file" {
+    source = "templates/jenkins/jobs/gazprom-devops-pipeline.xml"
+    destination = "/tmp/jenkins/jobs/gazprom-devops-pipeline.xml"
+  }
+
+  provisioner "file" {
+    content = data.template_file.jenkins_credentials_data.rendered
+    destination = "/tmp/jenkins/credentials.xml"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod 400 ~/.ssh/config",
