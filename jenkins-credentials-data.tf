@@ -5,6 +5,6 @@ data "template_file" "jenkins_credentials_data" {
     dockerhub_username = var.dockerhub_credentials.username
     dockerhub_password = var.dockerhub_credentials.password
 
-    dockerhub_password = var.db_password
+    db_password = var.db_password
   }
 }
