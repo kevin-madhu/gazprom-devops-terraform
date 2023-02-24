@@ -15,7 +15,7 @@
     <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
       <triggers>
         <hudson.triggers.SCMTrigger>
-          <spec> * * * * 1</spec>
+          <spec>* * * * *</spec>
           <ignorePostCommitHooks>false</ignorePostCommitHooks>
         </hudson.triggers.SCMTrigger>
       </triggers>
