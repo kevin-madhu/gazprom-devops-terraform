@@ -36,6 +36,10 @@ variable "dockerhub_credentials" {
   })
 }
 
+variable "db_password" {
+  type = string
+}
+
 #variable "cluster_instance_type" {
 #  type = string
 #}
